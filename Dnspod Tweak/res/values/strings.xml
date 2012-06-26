@@ -3,5 +3,9 @@
 
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">Dnspod Tweak</string>
+    <string name="login_text_username">用户名：</string>
+    <string name="login_text_password">密码：</string>
+    <string name="login_btn_submit">登录</string>
+    
 
 </resources>
