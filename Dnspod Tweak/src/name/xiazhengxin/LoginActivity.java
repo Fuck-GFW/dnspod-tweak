@@ -28,7 +28,7 @@ public class LoginActivity extends Activity {
 				String userName = userNameEditText.getEditableText().toString();
 				String password = passwordEditText.getEditableText().toString();
 				Common common = Common.getInstance();
-				common.log();
+				common.HTTPS_query("");
 			}
 		});
 	}
