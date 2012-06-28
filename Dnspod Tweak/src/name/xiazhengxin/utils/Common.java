@@ -7,27 +7,34 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.protocol.HTTP;
 
 import android.util.Log;
 
 /**
  * @author sharl
  * @date 2012-6-25 下午5:31:48
+ * @last_modify 2012-6-28 下午6:14:42
  */
 public class Common {
+
+	final static String VERSION = "Dnspod Tweak/1.0 (x@xzx.im)";
 
 	static Common w = null;
 
@@ -55,7 +62,9 @@ public class Common {
 	 *              http://developer.android.com/reference/javax/net
 	 *              /ssl/HttpsURLConnection.html
 	 */
-	public HttpResponse HTTPS_query(String url) {
+	public String HTTPS_query(String path, HashMap<String, String> para) {
+		StringBuffer sb = new StringBuffer();
+		HttpsURLConnection connection = null;
 		try {
 			SSLContext context = SSLContext.getInstance("TLS");
 			context.init(null, new TrustManager[] { new X509TrustManager() {
@@ -72,19 +81,37 @@ public class Common {
 						String authType) throws CertificateException {
 				}
 			} }, null);
-			URL path = new URL(url);
-			HttpsURLConnection connection = (HttpsURLConnection) path
-					.openConnection();
+			URL url = new URL(path);
+			connection = (HttpsURLConnection) url.openConnection();
 			connection.setSSLSocketFactory(context.getSocketFactory());
+			// POST only
+			connection.setRequestMethod(HttpPost.METHOD_NAME);
+			// set User-Agent for identified
+			connection.setRequestProperty(HTTP.USER_AGENT, VERSION);
+			// set timeout & keep-alive
+			connection.setConnectTimeout(10000);
+			connection.setRequestProperty(HTTP.CONN_DIRECTIVE,
+					HTTP.CONN_KEEP_ALIVE);
+			// add parameters to request
+			StringBuffer sbPara = new StringBuffer("Test=1");
+			for (String s : para.keySet()) {
+				sbPara.append("&" + URLEncoder.encode(s, HTTP.UTF_8) + "="
+						+ URLEncoder.encode(para.get(s), HTTP.UTF_8));
+			}
+			connection.setDoOutput(true);
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream(), HTTP.UTF_8);
+			writer.write(sbPara.toString());
+			writer.flush();
+			// query
 			InputStream stream = connection.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					stream, "utf-8"));
-			String data;
-			StringBuffer sb = new StringBuffer();
+					stream, HTTP.UTF_8));
+			// get content from response
+			String data = null;
 			while ((data = reader.readLine()) != null) {
 				sb.append(data);
 			}
-
 		} catch (NoSuchAlgorithmException e) {
 			logException(e);
 		} catch (KeyManagementException e) {
@@ -93,8 +120,12 @@ public class Common {
 			logException(e);
 		} catch (IOException e) {
 			logException(e);
+		} finally {
+			if (connection != null) {
+				connection.disconnect();
+			}
 		}
-		return null;
+		return sb.toString();
 	}
 
 	public void log(int level, String tag, String msg) {

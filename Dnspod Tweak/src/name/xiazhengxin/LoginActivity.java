@@ -1,7 +1,10 @@
 package name.xiazhengxin;
 
+import java.util.HashMap;
+
 import name.xiazhengxin.utils.Common;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,8 +30,19 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				String userName = userNameEditText.getEditableText().toString();
 				String password = passwordEditText.getEditableText().toString();
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("login_email", userName);
+				map.put("login_password", password);
+				map.put("format", "json");
+				map.put("lang", "en");
+				map.put("error_on_empty", "no");
 				Common common = Common.getInstance();
-				common.HTTPS_query("");
+				String res = common.HTTPS_query(
+						"https://dnsapi.cn/User.Detail", map);
+				AlertDialog dialog = new AlertDialog.Builder(LoginActivity.this)
+						.create();
+				dialog.setMessage(res);
+				dialog.show();
 			}
 		});
 	}
