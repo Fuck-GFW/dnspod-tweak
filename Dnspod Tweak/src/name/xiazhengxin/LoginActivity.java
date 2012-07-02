@@ -3,8 +3,14 @@ package name.xiazhengxin;
 import java.util.HashMap;
 
 import name.xiazhengxin.utils.Common;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -12,10 +18,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * @author sharl
  * @date 2012-6-25 下午5:32:28
+ * @description Login Form
  */
 public class LoginActivity extends Activity {
 	/** Called when the activity is first created. */
@@ -24,6 +32,7 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		final Common common = Common.getInstance();
+		final Context c = this;
 		// get controls
 		final EditText userNameEditText = (EditText) findViewById(R.id.editText_UserName);
 		final EditText passwordEditText = (EditText) findViewById(R.id.editText_Password);
@@ -57,18 +66,30 @@ public class LoginActivity extends Activity {
 					editor.clear();
 				}
 				editor.commit();
-				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("login_email", userName);
-				map.put("login_password", password);
-				map.put("format", "json");
-				map.put("lang", "en");
-				map.put("error_on_empty", "no");
+				// save user auth data to session
+				common.setCommonParas(userName, password);
+				HashMap<String, String> map = common.getCommonParas();
 				String res = common.HTTPS_query(
-						"https://dnsapi.cn/User.Detail", map);
-				AlertDialog dialog = new AlertDialog.Builder(LoginActivity.this)
-						.create();
-				dialog.setMessage(res);
-				dialog.show();
+						"https://dnsapi.cn/Info.Version", map);
+				String code = "";
+				try {
+					// {"status":{"code":"1","message":"4.4","created_at":"2012-07-02 17:40:01"}}
+					JSONTokener tokener = new JSONTokener(res);
+					JSONObject object = new JSONObject(tokener)
+							.getJSONObject("status");
+					code = object.getString("code");
+				} catch (JSONException e) {
+					common.logException(e);
+				}
+				// login success or not
+				if ("1".equals(code)) {
+					// go to main UI
+					startActivity(new Intent(c, MainActivity.class));
+					finish();
+				} else {
+					Toast.makeText(c, R.string.login_err, Toast.LENGTH_SHORT)
+							.show();
+				}
 			}
 		});
 	}

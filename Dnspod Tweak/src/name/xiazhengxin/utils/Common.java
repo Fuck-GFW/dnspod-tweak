@@ -37,6 +37,32 @@ public class Common {
 
 	final static String VERSION = "Dnspod Tweak/1.0 (x@xzx.im)";
 
+	HashMap<String, String> commonParas = null;
+
+	/**
+	 * @return the commonParas
+	 */
+	public HashMap<String, String> getCommonParas() {
+		return commonParas;
+	}
+
+	/**
+	 * @param commonParas
+	 *            the commonParas to set
+	 */
+	public void setCommonParas(String username, String password) {
+		if (commonParas == null) {
+			commonParas = new HashMap<String, String>();
+			commonParas.put("format", "json");
+			commonParas.put("lang", "en");
+			commonParas.put("error_on_empty", "no");
+		} else {
+
+		}
+		commonParas.put("login_email", username);
+		commonParas.put("login_password", password);
+	}
+
 	static Common w = null;
 
 	private Common() {
