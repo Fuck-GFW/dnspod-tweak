@@ -15,7 +15,8 @@
         android:id="@+id/editText_UserName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:ems="10" >
+        android:ems="10"
+        android:inputType="text" >
 
         <requestFocus />
     </EditText>
@@ -36,9 +37,16 @@
 
     <Button
         android:id="@+id/button_Submit"
+        android:layout_width="100dip"
+        android:layout_height="50dip"
+        android:layout_gravity="center"
+        android:text="@string/login_btn_submit" />
+
+    <CheckBox
+        android:id="@+id/checkBox_SaveUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/login_btn_submit" />
+        android:text="@string/login_cbx_save" />
 
 </LinearLayout>

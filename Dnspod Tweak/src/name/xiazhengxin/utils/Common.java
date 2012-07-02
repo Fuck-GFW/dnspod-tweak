@@ -22,6 +22,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.protocol.HTTP;
 
@@ -141,6 +142,14 @@ public class Common {
 		for (StackTraceElement element : e.getStackTrace()) {
 			log(Log.ERROR, "", element.toString());
 		}
+	}
+
+	public String Base64Encode(String s) {
+		return new String(Base64.encodeBase64(s.getBytes()));
+	}
+
+	public String Base64Decode(String s) {
+		return new String(Base64.decodeBase64(s.getBytes()));
 	}
 
 }
