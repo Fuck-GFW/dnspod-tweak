@@ -25,6 +25,9 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import android.util.Log;
 
@@ -153,6 +156,20 @@ public class Common {
 			}
 		}
 		return sb.toString();
+	}
+
+	public String getReturnCode(String json) {
+		String code = "";
+		// {"status":{"code":"1","message":"4.4","created_at":"2012-07-02 17:40:01"}}
+		JSONTokener tokener = new JSONTokener(json);
+		JSONObject object = null;
+		try {
+			object = new JSONObject(tokener).getJSONObject("status");
+			code = object.getString("code");
+		} catch (JSONException e) {
+			logException(e);
+		}
+		return code;
 	}
 
 	public void log(int level, String tag, String msg) {

@@ -3,11 +3,6 @@ package name.xiazhengxin;
 import java.util.HashMap;
 
 import name.xiazhengxin.utils.Common;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -71,16 +66,7 @@ public class LoginActivity extends Activity {
 				HashMap<String, String> map = common.getCommonParas();
 				String res = common.HTTPS_query(
 						"https://dnsapi.cn/Info.Version", map);
-				String code = "";
-				try {
-					// {"status":{"code":"1","message":"4.4","created_at":"2012-07-02 17:40:01"}}
-					JSONTokener tokener = new JSONTokener(res);
-					JSONObject object = new JSONObject(tokener)
-							.getJSONObject("status");
-					code = object.getString("code");
-				} catch (JSONException e) {
-					common.logException(e);
-				}
+				String code = common.getReturnCode(res);
 				// login success or not
 				if ("1".equals(code)) {
 					// go to main UI

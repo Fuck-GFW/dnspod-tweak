@@ -8,6 +8,25 @@
     <string name="login_btn_submit">登录</string>
     <string name="login_cbx_save">记住密码</string>
     <string name="login_err">用户名或密码错误！</string>
+    <string name="main_text_user_status">状态：</string>
+    <string name="main_text_email_status">邮箱：</string>
+    <string name="main_text_cellphone_status">手机：</string>
+    <string name="main_btn_goto_detail">修改资料</string>
+    <string name="main_btn_goto_password">修改密码</string>
+    <string name="main_btn_goto_email">修改邮箱</string>
+    <string name="main_btn_goto_cellphone">修改手机</string>
+    <string name="main_btn_goto_info">查看个人资料</string>
+    <string name="main_btn_goto_domain">管理域名</string>
+    <string name="main_btn_exit">退出</string>
+    <string name="main_user_type_personal">个人用户</string>
+    <string name="main_user_type_company">企业用户</string>
+    <string name="main_user_status_enable">启用</string>
+    <string name="main_user_status_disable">未启用</string>
+    <string name="main_email_status_enable">已验证</string>
+    <string name="main_email_status_disable">未验证</string>
+    <string name="main_cellphone_status_enable">已验证</string>
+    <string name="main_cellphone_status_disable">未验证</string>
+    
     
 
 </resources>
